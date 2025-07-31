@@ -2,7 +2,7 @@
 
 // function for our list view
 async function getAllRecords() {
-  let getResultElement = document.getElementById("brews");
+  let getResultElement = document.getElementById("Restaurants");
 
   const options = {
     method: "GET",
@@ -30,18 +30,7 @@ async function getAllRecords() {
 
         newHtml += `
         
-         <div class="col-xl-4 cardImageText">
-          <div class="card list move border-dark mb-5" style="width: 20rem;">
-          <a href="breweries.html?id=${data.records[i].id}">${
-          logo
-            ? `<img class="card-img-top rounded" alt="${name}" src="${logo[0].url}">`
-            : ``
-        }
-          </a>
-          <p hidden class="card-key">${neighborhood}</p>
-          </div>
-          </div>
-        </div>
+         <div>${name}</div>
     
         
         `;
