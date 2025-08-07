@@ -48,7 +48,7 @@ async function getAllRecords() {
                 ? `<img class="card-img-top rounded" alt="${name}" src="${logo[0].url}">`
                 : ``
             }
-            <h6>${phone}</h6>
+            <h6> Phone Number:${phone}📲</h6>
             <h6>${location}</h6>
             <h7> Description: ${description}</h7><br></br>
             <p> Hours: ${hours} 🕰️</p>
