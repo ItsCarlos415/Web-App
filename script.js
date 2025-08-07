@@ -57,7 +57,7 @@ async function getAllRecords() {
                   </a>
                 </h5>
                 <h6>📲 Phone: ${phone || "N/A"}</h6>
-                <h6>${location || ""}</h6>
+                <h6> 📍${location || ""}</h6>
                 <p><strong>Description:</strong> ${description || ""}</p>
                 <p>🕰️ Hours: ${hours || ""}</p>
                 <p>⭐ Reviews: ${reviews || ""}</p>
