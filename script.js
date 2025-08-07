@@ -1,82 +1,138 @@
 "use strict";
 
-// function for our list view
 async function getAllRecords() {
   let getResultElement = document.getElementById("Restaurants");
+  let dropdown = document.getElementById("restaurantDropdown");
 
   const options = {
     method: "GET",
     headers: {
-      Authorization: "Bearer patfEJjmGd4egCkYT.ad361792ce913f19954a8150fbacdf0e717d16b069ff67e53b2a820af838b479",
+      Authorization:
+        "Bearer patfEJjmGd4egCkYT.ad361792ce913f19954a8150fbacdf0e717d16b069ff67e53b2a820af838b479",
     },
   };
 
-
-  await fetch(
-    "https://api.airtable.com/v0/app3ztynCnkXsjtRL/Data",
-    options
-  )
+  await fetch("https://api.airtable.com/v0/app3ztynCnkXsjtRL/Data", options)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data); // response is an object w/ .records array
+      console.log(data);
 
-      getResultElement.innerHTML = ""; // clear brews
+      getResultElement.innerHTML = "";
+      dropdown.innerHTML = "";
 
       let newHtml = "";
-    
+
       for (let i = 0; i < data.records.length; i++) {
-        let logo = data.records[i].fields["Images"];
-        let name = data.records[i].fields["Name"]; //here we are using the Field ID to fecth the name property
-        let neighborhood = data.records[i].fields["Neighborhood"];
-        let phone = data.records[i].fields["Phone"];
-        let location = data.records[i].fields["Location"];
-        let description = data.records[i].fields["Description"];
-        let hours = data.records[i].fields["Hours"];
-        let reviews = data.records[i].fields["Reviews"];
-        let eats = data.records[i].fields["Eats"]; 
-        let favmeal = data.records[i].fields["FavMeal"];
-        
+        let record = data.records[i];
+        let fields = record.fields;
+
+        let logo = fields["Images"];
+        let name = fields["Name"];
+        let phone = fields["Phone"];
+        let location = fields["Location"];
+        let description = fields["Description"];
+        let hours = fields["Hours"];
+        let reviews = fields["Reviews"];
+        let eats = fields["Eats"];
+        let favmeal = fields["FavMeal"];
+        let website = fields["Website"] || "";
+
+        let anchorId = name.replace(/\s+/g, "-").toLowerCase();
+
+        // Add to dropdown
+        dropdown.innerHTML += `<li><a class="dropdown-item" href="#${anchorId}">${name}</a></li>`;
 
         newHtml += `
-        <br></br> <br></br>
-        <div class="card" style="width: 18rem;">
-
-          <div class="card-body">
-            <h5 class="card-title">${name}</h5>
-            ${
-              logo
-                ? `<img class="card-img-top rounded" alt="${name}" src="${logo[0].url}">`
-                : ``
-            }
-            <h6> Phone Number:${phone}📲</h6>
-            <h6>${location}</h6>
-            <h7> Description: ${description}</h7><br></br>
-            <p> Hours: ${hours} 🕰️</p>
-            <p>Star Reviews: ${reviews} ⭐️</p>
-            <h7> ${eats}</h7>
-            <p> Favorite Meal: ${favmeal} 😁</p>
-            
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-            <a href="index.html?id=${data.records[i].id}">
-
-            }"
-             class="btn btn-primary">Go somewhere</a>
+          <div class="col-sm-12 col-md-6 col-lg-4 mb-4" id="${anchorId}">
+            <div class="card h-100">
+              ${
+                logo
+                  ? `<img class="card-img-top img-fluid rounded" alt="${name}" src="${logo[0].url}">`
+                  : ``
+              }
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">
+                  <a href="${website}" target="_blank" rel="noopener noreferrer" class="text-decoration-none text-primary">
+                    ${name}
+                  </a>
+                </h5>
+                <h6>📲 Phone: ${phone || "N/A"}</h6>
+                <h6>${location || ""}</h6>
+                <p><strong>Description:</strong> ${description || ""}</p>
+                <p>🕰️ Hours: ${hours || ""}</p>
+                <p>⭐ Reviews: ${reviews || ""}</p>
+                <p>${eats || ""}</p>
+                <p>😁 Favorite Meal: ${favmeal || ""}</p>
+                <div class="mt-auto d-flex justify-content-between">
+                  <a href="index.html?id=${record.id}" class="btn btn-primary">View Details</a>
+                  ${
+                    website
+                      ? `<a href="${website}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary">Visit Website</a>`
+                      : ""
+                  }
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-    
         `;
       }
 
       getResultElement.innerHTML = newHtml;
+    })
+    .catch((error) => {
+      console.error("Error fetching records:", error);
+      getResultElement.innerHTML = "<p>Failed to load data. Please try again later.</p>";
     });
-
 }
 
-async function getOneRecord (id) {
+async function getOneRecord(id) {
+  const getResultElement = document.getElementById("Restaurants");
 
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization:
+        "Bearer patfEJjmGd4egCkYT.ad361792ce913f19954a8150fbacdf0e717d16b069ff67e53b2a820af838b479",
+    },
+  };
+
+  const response = await fetch(
+    `https://api.airtable.com/v0/app3ztynCnkXsjtRL/Data/${id}`,
+    options
+  );
+  const data = await response.json();
+  const fields = data.fields;
+
+  getResultElement.innerHTML = `
+    <div class="card detail-card">
+      <div class="card-body">
+        <h5 class="card-title">${fields["Name"]}</h5>
+        ${
+          fields["Images"]
+            ? `<img class="card-img-top rounded" src="${fields["Images"][0].url}">`
+            : ""
+        }
+        <p>${fields["Description"]}</p>
+        <p>Location: ${fields["Location"]}</p>
+        <p>Phone: ${fields["Phone"]}</p>
+        <p>Hours: ${fields["Hours"]}</p>
+        <p>Reviews: ${fields["Reviews"]}</p>
+        <p>Eats: ${fields["Eats"]}</p>
+        <p>Favorite Meal: ${fields["FavMeal"]}</p>
+        ${
+          fields["Website"]
+            ? `<a href="${fields["Website"]}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary mt-3 me-2">Visit Website</a>`
+            : ""
+        }
+        <a href="index.html" class="btn btn-secondary mt-3">Back to List</a>
+      </div>
+    </div>
+  `;
 }
-
- getAllRecords(); // no id given, fetch summaries
 
 let idParams = window.location.search.split("?id=");
-if (idParams.length >= 2) {}
+if (idParams.length >= 2) {
+  getOneRecord(idParams[1]);
+} else {
+  getAllRecords();
+}

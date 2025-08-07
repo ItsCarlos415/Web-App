@@ -1,0 +1,47 @@
+body {
+  padding-top: 80px;
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Cards */
+.card {
+  margin-bottom: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: none;
+  transition: transform 0.2s ease;
+}
+.card:hover {
+  transform: scale(1.02);
+}
+
+/* Images */
+.card-img-top {
+  max-height: 200px;
+  object-fit: cover;
+}
+
+/* Card text spacing */
+.card-body h5,
+.card-body h6,
+.card-body p {
+  margin-bottom: 0.5rem;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Navbar Brand */
+.navbar-brand {
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+}
+
+/* Center detail card */
+.detail-card {
+  max-width: 600px;
+  margin: auto;
+  margin-top: 40px;
+}
