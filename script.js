@@ -113,12 +113,12 @@ async function getOneRecord(id) {
             : ""
         }
         <p>${fields["Description"]}</p>
-        <p>Location: ${fields["Location"]}</p>
-        <p>Phone: ${fields["Phone"]}</p>
-        <p>Hours: ${fields["Hours"]}</p>
-        <p>Reviews: ${fields["Reviews"]}</p>
-        <p>Eats: ${fields["Eats"]}</p>
-        <p>Favorite Meal: ${fields["FavMeal"]}</p>
+        <p>Location: 📍 ${fields["Location"]}</p>
+        <p>Phone: 📲 ${fields["Phone"]}</p>
+        <p>Hours: 🕰️ ${fields["Hours"]}</p>
+        <p>Reviews: ⭐️${fields["Reviews"]}</p>
+        <p>Eats: 🍽️ ${fields["Eats"]}</p>
+        <p>Favorite Meal: 😋${fields["FavMeal"]}</p>
         ${
           fields["Website"]
             ? `<a href="${fields["Website"]}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary mt-3 me-2">Visit Website</a>`

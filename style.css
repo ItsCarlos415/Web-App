@@ -17,15 +17,15 @@ body {
 
 /* Images */
 .card-img-top {
-  max-height: 200px;
-  object-fit: cover;
+  max-height: 600px;
+  object-fit: 600px;
 }
 
 /* Card text spacing */
 .card-body h5,
-.card-body h6,
+.card-body h8,
 .card-body p {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.5 rem;
 }
 
 /* Smooth scroll */
