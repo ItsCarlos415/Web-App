@@ -20,7 +20,6 @@ async function fetchAllRecords() {
   return data.records;
 }
 
-// Fetch one record by ID
 async function fetchRecordById(id) {
   const url = `https://api.airtable.com/v0/${airtableBaseId}/${airtableTableName}/${id}`;
   const options = {
@@ -33,7 +32,6 @@ async function fetchRecordById(id) {
   return data;
 }
 
-// Render list of cards + populate dropdown
 function renderList(records) {
   container.innerHTML = "";
   dropdown.innerHTML = "";
@@ -73,7 +71,7 @@ function renderList(records) {
   });
 }
 
-// Render single record details
+
 function renderDetails(record) {
   container.innerHTML = "";
 
@@ -103,17 +101,17 @@ function renderDetails(record) {
   container.insertAdjacentHTML("beforeend", detailHTML);
 }
 
-// Main function to control what to show
+
 async function main() {
   try {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
 
     if (id) {
-      // Show single record detail
+     
       const record = await fetchRecordById(id);
       renderDetails(record);
-      // Also load all records to populate dropdown
+   
       const allRecords = await fetchAllRecords();
       dropdown.innerHTML = "";
       allRecords.forEach(r => {
@@ -122,7 +120,7 @@ async function main() {
         dropdown.appendChild(li);
       });
     } else {
-      // Show all records list
+    
       const records = await fetchAllRecords();
       renderList(records);
     }

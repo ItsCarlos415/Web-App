@@ -22,7 +22,7 @@ body {
 }
 
 /* Card text spacing */
-.card-body h5,
+.card-body h6,
 .card-body h6,
 .card-body p {
   margin-bottom: 0.5rem;
