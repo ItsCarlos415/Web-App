@@ -1,82 +1,135 @@
 "use strict";
 
-// function for our list view
-async function getAllRecords() {
-  let getResultElement = document.getElementById("Restaurants");
+const airtableApiKey = "patfEJjmGd4egCkYT.ad361792ce913f19954a8150fbacdf0e717d16b069ff67e53b2a820af838b479";
+const airtableBaseId = "app3ztynCnkXsjtRL";
+const airtableTableName = "Data";
 
+const container = document.getElementById("Restaurants");
+const dropdown = document.getElementById("restaurantDropdown");
+
+// Fetch all records from Airtable
+async function fetchAllRecords() {
+  const url = `https://api.airtable.com/v0/${airtableBaseId}/${airtableTableName}`;
   const options = {
     method: "GET",
-    headers: {
-      Authorization: "Bearer patfEJjmGd4egCkYT.ad361792ce913f19954a8150fbacdf0e717d16b069ff67e53b2a820af838b479",
-    },
+    headers: { Authorization: `Bearer ${airtableApiKey}` },
   };
+  const response = await fetch(url, options);
+  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  const data = await response.json();
+  return data.records;
+}
 
+// Fetch one record by ID
+async function fetchRecordById(id) {
+  const url = `https://api.airtable.com/v0/${airtableBaseId}/${airtableTableName}/${id}`;
+  const options = {
+    method: "GET",
+    headers: { Authorization: `Bearer ${airtableApiKey}` },
+  };
+  const response = await fetch(url, options);
+  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  const data = await response.json();
+  return data;
+}
 
-  await fetch(
-    "https://api.airtable.com/v0/app3ztynCnkXsjtRL/Data",
-    options
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data); // response is an object w/ .records array
+// Render list of cards + populate dropdown
+function renderList(records) {
+  container.innerHTML = "";
+  dropdown.innerHTML = "";
 
-      getResultElement.innerHTML = ""; // clear brews
+  records.forEach(record => {
+    const f = record.fields;
 
-      let newHtml = "";
-    
-      for (let i = 0; i < data.records.length; i++) {
-        let logo = data.records[i].fields["Images"];
-        let name = data.records[i].fields["Name"]; //here we are using the Field ID to fecth the name property
-        let neighborhood = data.records[i].fields["Neighborhood"];
-        let phone = data.records[i].fields["Phone"];
-        let location = data.records[i].fields["Location"];
-        let description = data.records[i].fields["Description"];
-        let hours = data.records[i].fields["Hours"];
-        let reviews = data.records[i].fields["Reviews"];
-        let eats = data.records[i].fields["Eats"]; 
-        let favmeal = data.records[i].fields["FavMeal"];
-        
-
-        newHtml += `
-        <br></br> <br></br>
-        <div class="card" style="width: 18rem;">
-
+    // Cards
+    const cardHTML = `
+      <div class="col-md-4 mb-4">
+        <div class="card" style="width: 100%;">
+          ${
+            f.Images && f.Images.length > 0
+              ? `<img src="${f.Images[0].url}" alt="${f.Name}" class="card-img-top rounded" />`
+              : ""
+          }
           <div class="card-body">
-            <h5 class="card-title">${name}</h5>
-            ${
-              logo
-                ? `<img class="card-img-top rounded" alt="${name}" src="${logo[0].url}">`
-                : ``
-            }
-            <h6> Phone Number:${phone}📲</h6>
-            <h6>${location}</h6>
-            <h7> Description: ${description}</h7><br></br>
-            <p> Hours: ${hours} 🕰️</p>
-            <p>Star Reviews: ${reviews} ⭐️</p>
-            <h7> Eats: ${eats}🍽️</h7>
-            <p> Favorite Meal: ${favmeal} 😁</p>
-            
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-            <a href="index.html?id=${data.records[i].id}">
-
-            }"
-             class="btn btn-primary">Go somewhere</a>
+            <h5 class="card-title">${f.Name}</h5>
+            <h6>Phone Number: ${f.Phone} 📲</h6>
+            <h6>${f.Location}</h6>
+            <p>Description: ${f.Description}</p>
+            <p>Hours: ${f.Hours} 🕰️</p>
+            <p>Star Reviews: ${f.Reviews} ⭐️</p>
+            <p>Eats: ${f.Eats} 🍽️</p>
+            <p>Favorite Meal: ${f.FavMeal} 😁</p>
+            <a href="index.html?id=${record.id}" class="btn btn-primary">Go somewhere</a>
           </div>
         </div>
-    
-        `;
+      </div>
+    `;
+    container.insertAdjacentHTML("beforeend", cardHTML);
+
+    // Dropdown
+    const li = document.createElement("li");
+    li.innerHTML = `<a class="dropdown-item" href="index.html?id=${record.id}">${f.Name}</a>`;
+    dropdown.appendChild(li);
+  });
+}
+
+// Render single record details
+function renderDetails(record) {
+  container.innerHTML = "";
+
+  const f = record.fields;
+
+  const detailHTML = `
+    <div class="detail-card card">
+      ${
+        f.Images && f.Images.length > 0
+          ? `<img src="${f.Images[0].url}" alt="${f.Name}" class="card-img-top rounded" />`
+          : ""
       }
+      <div class="card-body">
+        <h3 class="card-title">${f.Name}</h3>
+        <h5>Phone Number: ${f.Phone} 📲</h5>
+        <h5>${f.Location}</h5>
+        <p><strong>Description:</strong> ${f.Description}</p>
+        <p><strong>Hours:</strong> ${f.Hours} 🕰️</p>
+        <p><strong>Star Reviews:</strong> ${f.Reviews} ⭐️</p>
+        <p><strong>Eats:</strong> ${f.Eats} 🍽️</p>
+        <p><strong>Favorite Meal:</strong> ${f.FavMeal} 😁</p>
+        <a href="index.html" class="btn btn-secondary mt-3">Back to list</a>
+      </div>
+    </div>
+  `;
 
-      getResultElement.innerHTML = newHtml;
-    });
-
+  container.insertAdjacentHTML("beforeend", detailHTML);
 }
 
-async function getOneRecord (id) {
+// Main function to control what to show
+async function main() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
 
+    if (id) {
+      // Show single record detail
+      const record = await fetchRecordById(id);
+      renderDetails(record);
+      // Also load all records to populate dropdown
+      const allRecords = await fetchAllRecords();
+      dropdown.innerHTML = "";
+      allRecords.forEach(r => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a class="dropdown-item" href="index.html?id=${r.id}">${r.fields.Name}</a>`;
+        dropdown.appendChild(li);
+      });
+    } else {
+      // Show all records list
+      const records = await fetchAllRecords();
+      renderList(records);
+    }
+  } catch (error) {
+    container.innerHTML = `<p class="text-danger">Error loading data: ${error.message}</p>`;
+    console.error(error);
+  }
 }
 
- getAllRecords(); // no id given, fetch summaries
-
-let idParams = window.location.search.split("?id=");
-if (idParams.length >= 2) {}
+main();
