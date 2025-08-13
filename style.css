@@ -23,7 +23,7 @@ body {
 
 /* Card text spacing */
 .card-body h5,
-.card-body h8,
+.card-body h4,
 .card-body p {
   margin-bottom: 0.5 rem;
 }
@@ -43,5 +43,5 @@ html {
 .detail-card {
   max-width: 600px;
   margin: auto;
-  margin-top: 40px;
+  margin-top: 90px;
 }
