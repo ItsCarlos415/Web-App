@@ -81,6 +81,7 @@ else getAllRecords();
 const themeToggleBtn = document.getElementById("themeToggle");
 themeToggleBtn.addEventListener("click", () => {
   document.body.classList.toggle("dark-theme");
+  document.getElementById("splash").classList.toggle("dark-theme");
   if (document.body.classList.contains("dark-theme")) {
     themeToggleBtn.textContent = "☀️ Light Mode";
     themeToggleBtn.classList.replace("btn-outline-light","btn-outline-warning");
@@ -94,6 +95,7 @@ themeToggleBtn.addEventListener("click", () => {
 const splashThemeBtn = document.getElementById("splashThemeToggle");
 splashThemeBtn.addEventListener("click", () => {
   document.body.classList.toggle("dark-theme");
+  document.getElementById("splash").classList.toggle("dark-theme");
   if (document.body.classList.contains("dark-theme")) {
     splashThemeBtn.textContent = "☀️ Light Mode";
     splashThemeBtn.classList.replace("btn-outline-light","btn-outline-warning");
